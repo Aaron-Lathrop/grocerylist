@@ -1,0 +1,59 @@
+<script>
+    import { fade } from 'svelte/transition'
+    import { groceryStore, groceryItems } from '../store/stores'
+    import TypeAhead from './TypeAhead.svelte'
+    import GrocerySection from './GrocerySection.svelte'
+    import { onFirst } from '../helpers/array'
+
+    $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }))
+    $: normalizedItemNames = normalizedGroceryItems.map(i => i.name)
+    $: itemsInEachSection = $groceryStore.sections
+            .filter(s => s.items.some(item => normalizedItemNames.includes(item)))
+            .map(s => ({ 
+                name: s.name, 
+                items: normalizedGroceryItems.filter(i => s.items.includes(i.name)) 
+            }))
+    $: allItemsInStore = $groceryStore.sections.flatMap(x => x.items.map(i => i.toLowerCase()))
+    $: itemsNotInStore = $groceryItems.filter(i => !allItemsInStore.includes(i.name))
+
+    const handleItemClick = item => {
+        itemsInEachSection = itemsInEachSection.map(s => {
+            onFirst(i => i.name === item.name,
+                    i => i.gotIt = !i.gotIt,
+                    s.items)
+                return s;
+        });
+    }
+
+    const handleItemDelete = item => {
+        $groceryItems = $groceryItems.filter(gI => gI.name != item.name);
+    }
+
+    const clearList = () => {
+        if (confirm("Confirm clearing grocery list")) {
+            $groceryItems = [];
+        }
+    }
+</script>
+
+<TypeAhead placeholder='Add items to list' options={allItemsInStore} />
+<h1 class='m-4 font-bold text-2xl text-center'>{$groceryStore.name}</h1>
+{#each itemsInEachSection as s}
+    <GrocerySection bind:sectionName={s.name} bind:items={s.items} 
+        on:itemClick={e => handleItemClick(e.detail)} on:itemDelete={e => handleItemDelete(e.detail)} 
+    />
+{/each}
+<GrocerySection sectionName="Not in store" bind:items={itemsNotInStore} 
+    on:itemClick={e => handleItemClick(e.detail)} on:itemDelete={e => handleItemDelete(e.detail)} 
+/>
+
+{#if $groceryItems.length}
+<div transition:fade class="text-center">
+    <button type="button" class="text-lg p-5 w-1/2 rounded-md bg-red-300 shadow-md hover:bg-red-400 hover:shadow-lg" 
+    on:click={clearList}>
+        Clear all
+    </button>
+</div>
+{:else}
+<p transition:fade class="text-center text-lg">Your list is empty</p>
+{/if}
