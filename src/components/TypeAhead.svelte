@@ -8,10 +8,12 @@
     $: filteredOptions = ( foundOption && options.filter(o => o.includes(value.toLowerCase())) ) || []
 
     const selectOption = option => {
-        if ($groceryItems.some(i => i.name == option)) {
+        if (!option) return;
+
+        if ($groceryItems.some(i => i.name.toLowerCase() == option.toLowerCase())) {
             $alert = `"${option}" is already on the list`;
         } else {
-            groceryItems.add(option);
+            groceryItems.add(option.toLowerCase());
         }
         value = '';
     }
