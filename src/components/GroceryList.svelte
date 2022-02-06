@@ -43,9 +43,11 @@
         on:itemClick={e => handleItemClick(e.detail)} on:itemDelete={e => handleItemDelete(e.detail)} 
     />
 {/each}
+{#if itemsNotInStore.length}
 <GrocerySection sectionName="Not in store" bind:items={itemsNotInStore} 
     on:itemClick={e => handleItemClick(e.detail)} on:itemDelete={e => handleItemDelete(e.detail)} 
 />
+{/if}
 
 {#if $groceryItems.length}
 <div transition:fade class="text-center">
