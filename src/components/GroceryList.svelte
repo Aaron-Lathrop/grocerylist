@@ -5,6 +5,16 @@
     import GrocerySection from './GrocerySection.svelte'
     import { onFirst } from '../helpers/array'
 
+    export let groceryStoreData = {};
+
+    $: {
+        try {
+            $groceryStore = groceryStoreData.docs[0].data();
+        } catch (error) {
+            $groceryStore = {};
+            console.log(error);
+        }
+    }
     $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }))
     $: normalizedItemNames = normalizedGroceryItems.map(i => i.name)
     $: itemsInEachSection = $groceryStore.sections
