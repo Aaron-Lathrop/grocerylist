@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Grocery List</title>
 
-	<link rel='icon' type='image/png' href='/favicon.png'>
-	<link rel='stylesheet' href='/build/bundle.css'>
-
+    <link rel='icon' type='image/png' href='/favicon.png'>
+    <link rel='stylesheet' href='/build/bundle.css'>
+	
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/9.6.6/firebase-app-compat.js"></script>
     <!-- include only the Firebase features as you need -->
@@ -25,7 +25,7 @@
       to avoid connecting the SDK to running emulators.
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-	
+
 	<!-- Svelte generated -->
 	<script defer src='/build/bundle.js'></script>
 
@@ -47,41 +47,41 @@
   <body class="bg-gray-100">
 	<div id="app"></div>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+      // document.addEventListener('DOMContentLoaded', function() {
+      //   // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+      //   // // The Firebase SDK is initialized and available here!
+      //   //
+      //   // firebase.auth().onAuthStateChanged(user => { });
+      //   // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+      //   // firebase.firestore().doc('/foo/bar').get().then(() => { });
+      //   // firebase.functions().httpsCallable('yourFunction')().then(() => { });
+      //   // firebase.messaging().requestPermission().then(() => { });
+      //   // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+      //   // firebase.analytics(); // call to activate
+      //   // firebase.analytics().logEvent('tutorial_completed');
+      //   // firebase.performance(); // call to activate
+      //   //
+      //   // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            // 'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          console.log(`Firebase SDK loaded with ${features.join(', ')}`);
-        } catch (e) {
-          console.error(e);
-          console.log('Error loading the Firebase SDK, check the console.');
-        }
-      });
+      //   try {
+      //     let app = firebase.app();
+      //     let features = [
+      //       'auth', 
+      //       'database', 
+      //       'firestore',
+      //       // 'functions',
+      //       'messaging', 
+      //       'storage', 
+      //       'analytics', 
+      //       'remoteConfig',
+      //       'performance',
+      //     ].filter(feature => typeof app[feature] === 'function');
+      //     console.log(`Firebase SDK loaded with ${features.join(', ')}`);
+      //   } catch (e) {
+      //     console.error(e);
+      //     console.log('Error loading the Firebase SDK, check the console.');
+      //   }
+      // });
     </script>
   </body>
 </html>
