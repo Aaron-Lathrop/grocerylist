@@ -4,8 +4,8 @@
     export let options = []
     
     let value = '';
-    $: foundOption = options.some(o => value !== '' && o.includes(value.toLowerCase()))
-    $: filteredOptions = ( foundOption && options.filter(o => o.includes(value.toLowerCase())) ) || []
+    $: foundOption = options.some(o => value !== '' && o.toLowerCase().includes(value.toLowerCase()))
+    $: filteredOptions = ( foundOption && options.filter(o => o.toLowerCase().includes(value.toLowerCase())) ) || []
 
     const selectOption = option => {
         if (!option) return;
@@ -13,7 +13,7 @@
         if ($groceryItems.some(i => i.name.toLowerCase() == option.toLowerCase())) {
             $alert = `"${option}" is already on the list`;
         } else {
-            groceryItems.add(option.toLowerCase());
+            groceryItems.add(option);
         }
         value = '';
     }
