@@ -10,6 +10,27 @@ import sveltePreprocess from "svelte-preprocess";
 
 const production = !process.env.ROLLUP_WATCH;
 
+let postcssPlugins = [
+	require("postcss-import")(),
+	require("tailwindcss"),
+	require("autoprefixer"),
+];
+if (production) {
+	postcssPlugins = [
+		...postcssPlugins, 
+		cssnano(),
+		purgecss({
+			content: ["./**/*.html", "./src/**/*.svelte"],
+			// parse "Svelty" syntax
+			// https://github.com/tailwindlabs/tailwindcss/discussions/1731#discussioncomment-294774
+			defaultExtractor: content => [
+			...(content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []),
+			...(content.match(/(?<=class:)[^=>\/\s]*/g) || []),
+			],
+		})
+	]
+}
+
 export default {
 	input: 'src/main.js',
 	output: {
@@ -23,22 +44,7 @@ export default {
 			preprocess: sveltePreprocess({
 				sourceMap: !production,
 				postcss: {
-				  plugins: [
-						require("postcss-import")(),
-						// require('tailwindcss/nesting')(require('postcss-nesting')),
-						require("tailwindcss"),
-						require("autoprefixer"),
-						production && cssnano(),
-						// Only purge css in production
-						production &&
-							purgecss({
-								content: ["./**/*.html", "./src/**/*.svelte"],
-								defaultExtractor: content => [
-								...(content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []),
-								...(content.match(/(?<=class:)[^=>\/\s]*/g) || []),
-								],
-							})
-					],
+				  plugins: postcssPlugins,
 				},
 			}),
 			compilerOptions: {
