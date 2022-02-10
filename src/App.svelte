@@ -5,7 +5,7 @@
 </script>
 
 {#await groceryStoreData}
-	<p>...loading</p>
+
 {:then groceryStoreData} 
 	<Alert />
 	<GroceryList {groceryStoreData} />	
@@ -14,15 +14,5 @@
 {/await}
 
 <style global lang="postcss">
-	/* @import "./main.css"; */
-	
-	@tailwind base;
-  	@tailwind components;
-  	@tailwind utilities;
-
-	@layer utilities {
-  		.ml-55 {
-    		margin-left: 55%;
-		}
-	}
+	@import "./main.css";
 </style>
