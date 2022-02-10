@@ -12,3 +12,17 @@
 {:catch error}
 	<p>uh oh, couldn't get data... please refresh page</p>
 {/await}
+
+<style global lang="postcss">
+	/* @import "./main.css"; */
+	
+	@tailwind base;
+  	@tailwind components;
+  	@tailwind utilities;
+
+	@layer utilities {
+  		.ml-55 {
+    		margin-left: 55%;
+		}
+	}
+</style>

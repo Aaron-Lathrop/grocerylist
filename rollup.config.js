@@ -1,10 +1,12 @@
 import svelte from 'rollup-plugin-svelte';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
-// import { getBabelOutputPlugin } from '@rollup/plugin-babel';
+import css from 'rollup-plugin-css-only';
+import cssnano from 'cssnano';
+import purgecss from "@fullhuman/postcss-purgecss";
+import sveltePreprocess from "svelte-preprocess";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -17,25 +19,35 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
-		postcss({
-			extract: true,
-			minimize: true,
-			modules: true,
-			use: {
-                sass: null,
-                stylus: null,
-                less: { javascriptEnabled: true }
-            }
-		}),
 		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
-			css: css => {
-				css.write('public/build/bundle.css');
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+				postcss: {
+				  plugins: [
+						require("postcss-import")(),
+						// require('tailwindcss/nesting')(require('postcss-nesting')),
+						require("tailwindcss"),
+						require("autoprefixer"),
+						production && cssnano(),
+						// Only purge css in production
+						production &&
+							purgecss({
+								content: ["./**/*.html", "./src/**/*.svelte"],
+								defaultExtractor: content => [
+								...(content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []),
+								...(content.match(/(?<=class:)[^=>\/\s]*/g) || []),
+								],
+							})
+					],
+				},
+			}),
+			compilerOptions: {
+				// enable run-time checks when not in production
+				dev: !production
 			}
 		}),
+
+		css({ output: 'bundle.css' }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
