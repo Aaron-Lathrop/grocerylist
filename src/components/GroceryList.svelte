@@ -1,9 +1,8 @@
 <script>
-    import { fade } from 'svelte/transition'
-    import { groceryStore, groceryItems } from '../store/stores'
-    import TypeAhead from './TypeAhead.svelte'
-    import GrocerySection from './GrocerySection.svelte'
-    import { onFirst } from '../helpers/array'
+    import { fade } from 'svelte/transition';
+    import { groceryStore, groceryItems } from '../store/stores';
+    import TypeAhead from './TypeAhead.svelte';
+    import GrocerySection from './GrocerySection.svelte';
 
     export let groceryStoreData = {};
 
@@ -15,33 +14,33 @@
             console.log(error);
         }
     }
-    $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }))
-    $: normalizedItemNames = normalizedGroceryItems.map(i => i.name)
-    $: itemsInEachSection = $groceryStore.sections
-            .filter(s => s.items.some(item => normalizedItemNames.includes(item)))
-            .map(s => ({ 
-                name: s.name, 
-                items: normalizedGroceryItems.filter(i => s.items.includes(i.name)) 
-            }))
+    $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }));
+    $: normalizedItemNames = normalizedGroceryItems.map(i => i.name);
     $: allItemsInStore = $groceryStore.sections.flatMap(x => x.items.map(i => i.toLowerCase()))
-    $: itemsNotInStore = $groceryItems.filter(i => !allItemsInStore.includes(i.name))
+    $: itemsInEachSection = $groceryStore.sections
+            .filter(section => section.items.some(item => normalizedItemNames.includes(item)))
+            .map(section => ({ 
+                name: section.name, 
+                items: normalizedGroceryItems.filter(i => section.items.includes(i.name)) 
+            }));
+    $: itemsNotInStore = $groceryItems.filter(i => !allItemsInStore.includes(i.name.toLowerCase()));
 
     const handleItemClick = item => {
-        itemsInEachSection = itemsInEachSection.map(s => {
-            onFirst(i => i.name === item.name,
-                    i => i.gotIt = !i.gotIt,
-                    s.items)
-                return s;
+        $groceryItems = $groceryItems.map(s => {
+            if (s.name == item.name) {
+                s.gotIt = !s.gotIt;
+            }
+            return s;
         });
     }
 
     const handleItemDelete = item => {
-        $groceryItems = $groceryItems.filter(gI => gI.name != item.name);
+        groceryItems.remove(item);
     }
 
     const clearList = () => {
         if (confirm("Confirm clearing grocery list")) {
-            $groceryItems = [];
+            groceryItems.clear();
         }
     }
 </script>

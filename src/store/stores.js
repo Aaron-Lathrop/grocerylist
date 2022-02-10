@@ -11,7 +11,13 @@ const createGroceryItems = (initial) => {
 		subscribe,
 		set,
 		update,
-		add: item => typeof item == 'string' && update(items => [...items, { name: item, gotIt: false }])
+		add: item => {
+			typeof item == 'string' && update(items => [...items, { name: item, gotIt: false }])
+		},
+		clear: () => set([]),
+		remove: item => {
+			update(items => items.filter(i => i.name.toLowerCase() != item.name.toLowerCase()))
+		}
 	}
 }
 export const groceryItems = createGroceryItems([]);

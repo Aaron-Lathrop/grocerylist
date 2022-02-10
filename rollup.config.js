@@ -1,11 +1,35 @@
 import svelte from 'rollup-plugin-svelte';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
+import css from 'rollup-plugin-css-only';
+import cssnano from 'cssnano';
+import purgecss from "@fullhuman/postcss-purgecss";
+import sveltePreprocess from "svelte-preprocess";
 
 const production = !process.env.ROLLUP_WATCH;
+
+let postcssPlugins = [
+	require("postcss-import")(),
+	require("tailwindcss"),
+	require("autoprefixer"),
+];
+if (production) {
+	postcssPlugins = [
+		...postcssPlugins, 
+		cssnano(),
+		purgecss({
+			content: ["./**/*.html", "./src/**/*.svelte"],
+			// parse "Svelty" syntax
+			// https://github.com/tailwindlabs/tailwindcss/discussions/1731#discussioncomment-294774
+			defaultExtractor: content => [
+			...(content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []),
+			...(content.match(/(?<=class:)[^=>\/\s]*/g) || []),
+			],
+		})
+	]
+}
 
 export default {
 	input: 'src/main.js',
@@ -16,25 +40,20 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
-		postcss({
-			extract: true,
-			minimize: true,
-			modules: true,
-			use: {
-                sass: null,
-                stylus: null,
-                less: { javascriptEnabled: true }
-            }
-		}),
 		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
-			css: css => {
-				css.write('public/build/bundle.css');
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+				postcss: {
+				  plugins: postcssPlugins,
+				},
+			}),
+			compilerOptions: {
+				// enable run-time checks when not in production
+				dev: !production
 			}
 		}),
+
+		css({ output: 'bundle.css' }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -46,6 +65,7 @@ export default {
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
 		commonjs(),
+		// getBabelOutputPlugin ({ presets: ['@babel/preset-env'] }),
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),

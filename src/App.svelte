@@ -5,10 +5,14 @@
 </script>
 
 {#await groceryStoreData}
-	<p>...loading</p>
+
 {:then groceryStoreData} 
 	<Alert />
 	<GroceryList {groceryStoreData} />	
 {:catch error}
 	<p>uh oh, couldn't get data... please refresh page</p>
 {/await}
+
+<style global lang="postcss">
+	@import "./main.css";
+</style>
