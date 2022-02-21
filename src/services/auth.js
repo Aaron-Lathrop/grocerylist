@@ -19,8 +19,9 @@ export const checkLoggedIn = () => auth.onAuthStateChanged((loggedInUser) => {
 
 export const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-        // Signed in 
-        return userCredential.user;
+        // Signed in
+        user.set(userCredential.user)
+        return user;
     })
     .catch((error) => {
         const errorCode = error.code;
@@ -31,7 +32,8 @@ export const createUser = (email, password) => createUserWithEmailAndPassword(au
 export const logInUser = (email, password) => signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         // Signed in 
-        return userCredential.user;
+        user.set(userCredential.user)
+        return user;
     })
     .catch((error) => {
         const errorCode = error.code;

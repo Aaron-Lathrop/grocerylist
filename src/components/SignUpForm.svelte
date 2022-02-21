@@ -1,6 +1,5 @@
 <script>
     import { createUser } from '../services/auth';
-	import { user } from '../store/stores';
 
     let email = '';
 	let password = '';
@@ -15,8 +14,7 @@
             return;
         }
 
-        const createdUser = await createUser(email, password) 
-        $user = createdUser;
+        await createUser(email, password) 
         email = '';
         password = '';
         confirmPassword = '';

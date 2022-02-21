@@ -1,13 +1,11 @@
 <script>
     import { logInUser } from '../services/auth';
-	import { user } from '../store/stores';
 
     let email = '';
 	let password = '';
     
 	export async function login() {
-        const loggedInUser = await logInUser(email, password) 
-        $user = loggedInUser;
+        await logInUser(email, password) 
         email = '';
         password = '';
 	}
