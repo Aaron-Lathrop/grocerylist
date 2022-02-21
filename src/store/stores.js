@@ -21,3 +21,6 @@ const createGroceryItems = (initial) => {
 	}
 }
 export const groceryItems = createGroceryItems([]);
+
+export const checkedForLogin = writable(false);
+export const user = writable({});

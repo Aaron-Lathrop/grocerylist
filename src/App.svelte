@@ -1,12 +1,19 @@
 <script>
-	import { groceryStoreData } from './services/firebase';
+	import { onMount } from 'svelte';
+	import { checkLoggedIn } from './services/auth';
+	import { groceryStoreData } from './services/db';
 	import Alert from './components/Alert.svelte';
 	import GroceryList from "./components/GroceryList.svelte";
+  	import NavBar from './components/NavBar.svelte';
+
+	onMount(async () => {
+		checkLoggedIn();
+	})
 </script>
 
-{#await groceryStoreData}
+<NavBar />
 
-{:then groceryStoreData} 
+{#await groceryStoreData then groceryStoreData}
 	<Alert />
 	<GroceryList {groceryStoreData} />	
 {:catch error}
