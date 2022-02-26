@@ -29,6 +29,11 @@ export default function localStore(key, initial) {
                 setItem(newValue);
                 return newValue;
             });
+        },
+        value: () => {
+            let currentValue;
+            update(val => currentValue = val);
+            return currentValue;
         }
     };
 }

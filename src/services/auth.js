@@ -3,18 +3,25 @@ import app from './app';
 import { 
     getAuth, 
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword ,
+    signInWithEmailAndPassword,
     signOut
 } from "firebase/auth";
 import { checkedForLogin, user } from '../store/stores';
 
 const auth = getAuth(app);
 
-export const checkLoggedIn = () => auth.onAuthStateChanged((loggedInUser) => {
-    if (loggedInUser) {
-        user.set(loggedInUser);
+export const checkLoggedIn = () => new Promise((resolve, reject) => {
+    try {
+        auth.onAuthStateChanged((loggedInUser) => {
+            if (loggedInUser) {
+                user.set(loggedInUser);
+            }
+            checkedForLogin.set(true);
+        });
+        resolve(true);
+    } catch (error) {
+        reject(error);
     }
-    checkedForLogin.set(true);
 });
 
 export const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password)

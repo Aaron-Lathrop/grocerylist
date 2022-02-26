@@ -42,10 +42,12 @@
 </nav>
 
 {#if !$user.uid}
+<div class='absolute right-0'>
 	{#if showSignUpForm}
 		<SignUpForm />
 	{/if}
 	{#if showLoginForm}
 		<LoginForm />
 	{/if}
+</div>
 {/if}

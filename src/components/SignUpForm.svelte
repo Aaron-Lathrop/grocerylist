@@ -21,8 +21,8 @@
 	}
 </script>
 
-<form on:submit|preventDefault={signUp} class='bg-white text-center absolute right-0'>
-	<legend class="mx-auto mt-2 text-xl font-bold">
+<form on:submit|preventDefault={signUp} class='bg-white text-center'>
+	<legend class="mx-auto pt-2 text-xl font-bold">
         Sign up
     </legend>
 	<fieldset class='p-5'>
