@@ -1,10 +1,25 @@
+import { withTimestamp } from "../services/db";
 import { writable } from "svelte/store";
 
 const toString = obj => JSON.stringify(obj);
 const toObj = json => json && JSON.parse(json);
 
 export default function localStore(key, initial) {
-    const setItem = value => value && localStorage.setItem(key, toString(value));
+    const setItem = value => {
+        if (Array.isArray(value)) {
+            return localStorage.setItem(
+                key,
+                toString(value.map(withTimestamp))
+            );
+        }
+        else if (typeof value == 'object') {
+            return localStorage.setItem(
+                key, 
+                toString(withTimestamp(value))
+            );
+        }
+        return localStorage.setItem(value);
+    };
     const { subscribe, set, update } = writable(initial);
 
     const localItem = localStorage.getItem(key);
@@ -29,6 +44,11 @@ export default function localStore(key, initial) {
                 setItem(newValue);
                 return newValue;
             });
+        },
+        value: () => {
+            let currentValue;
+            update(val => currentValue = val);
+            return currentValue;
         }
     };
 }

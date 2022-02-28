@@ -4,20 +4,13 @@
     import TypeAhead from './TypeAhead.svelte';
     import GrocerySection from './GrocerySection.svelte';
 
-    export let groceryStoreData = {};
-
-    $: {
-        try {
-            $groceryStore = groceryStoreData.docs[0].data();
-        } catch (error) {
-            $groceryStore = {};
-            console.log(error);
-        }
-    }
+    $: currentGroceryStore = $groceryStore && $groceryStore[0] 
+        ? $groceryStore[0] 
+        : { sections: [], name: '' };
     $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }));
     $: normalizedItemNames = normalizedGroceryItems.map(i => i.name);
-    $: allItemsInStore = $groceryStore.sections.flatMap(x => x.items.map(i => i.toLowerCase()))
-    $: itemsInEachSection = $groceryStore.sections
+    $: allItemsInStore = currentGroceryStore.sections.flatMap(x => x.items.map(i => i.toLowerCase()))
+    $: itemsInEachSection = currentGroceryStore.sections
             .filter(section => section.items.some(item => normalizedItemNames.includes(item)))
             .map(section => ({ 
                 name: section.name, 
@@ -46,7 +39,7 @@
 </script>
 
 <TypeAhead placeholder='Add items to list' options={allItemsInStore} />
-<h1 class='m-4 font-bold text-2xl text-center'>{$groceryStore.name}</h1>
+<h1 class='m-4 font-bold text-2xl text-center'>{currentGroceryStore.name}</h1>
 {#each itemsInEachSection as s}
     <GrocerySection bind:sectionName={s.name} bind:items={s.items} 
         on:itemClick={e => handleItemClick(e.detail)} on:itemDelete={e => handleItemDelete(e.detail)} 

@@ -5,7 +5,6 @@
 
     export let sectionName = '';
     export let items = [];
-
 </script>
 
 <div class="mx-auto max-w-3xl">

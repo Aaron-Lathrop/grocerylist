@@ -2,9 +2,6 @@
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { initializeApp } from "firebase/app";
-import {
-    getFirestore, collection, getDocs
-} from 'firebase/firestore/lite';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,11 +16,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// init services
-const db = getFirestore();
-
-// collection ref
-const groceryStoreRef = collection(db, 'grocery-stores');
-
-//get collection data
-export const groceryStoreData = getDocs(groceryStoreRef);
+export default app;
