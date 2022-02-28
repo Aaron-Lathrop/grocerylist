@@ -16,13 +16,10 @@
 			getGroceryStores($user),
 			getGroceryItems($user)
 		]);
-		$groceryStore = data[0] || [];
-		$groceryItems = data[1] || [];
+		const [stores, items] = data;
+		groceryStore.syncWithDb(stores);
+		groceryItems.syncWithDb(items);
 		return data;
-	}
-
-	function updateDb() {
-		groceryItems.updateDb();
 	}
 </script>
 
@@ -38,7 +35,7 @@
 				<GroceryStoreForm />
 			{/if}	
 		{:catch error}
-			<p>{error}</p>
+			{console.error(error) || ''}
 			<p>uh oh, couldn't get data... please refresh page</p>
 		{/await}
 	{:else}

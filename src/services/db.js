@@ -45,6 +45,7 @@ export const withTimestamp = data => {
     else if (typeof data == 'object') {
         return { ...data, timestamp: Date.now() };
     }
+    throw new Error(`Invalid argument type, expected an Array or Object but got ${typeof data}`);
 };
 
 export const addGroceryStore = async (user, store) => {
@@ -52,26 +53,33 @@ export const addGroceryStore = async (user, store) => {
     if (!user.uid) return;
 
     const ref = collection(db, groceryStoreKey);
-    await setDoc(doc(ref, user.uid), withTimestamp({
-        stores: arrayUnion({
+    await setDoc(doc(ref, user.uid), {
+        stores: arrayUnion(withTimestamp({
             name: store.name,
             sections: store.sections || []
-        })
-    }),
+        }))
+    },
     { merge: true }
     );
+};
+
+export const setGroceryStores = async (user, stores) => {
+    if (!stores || !user.uid) return;
+
+    const ref = collection(db, groceryStoreKey);
+    await setDoc(doc(ref, user.uid), { stores: withTimestamp(stores) });
 };
 
 export const addGroceryItem = async (user, item) => {
     if (!item || !item.name || !user.uid) return;
 
     const ref = collection(db, groceryItemsKey);
-    await setDoc(doc(ref, user.uid), withTimestamp({
-        items: arrayUnion({
+    await setDoc(doc(ref, user.uid), {
+        items: arrayUnion(withTimestamp({
             name: item.name,
             gotIt: false
-        })
-    }),
+        }))
+    },
     { merge: true }
     );
 };
@@ -80,5 +88,5 @@ export const setGroceryItems = async (user, items) => {
     if (!items || !user.uid) return;
 
     const ref = collection(db, groceryItemsKey);
-    await setDoc(doc(ref, user.uid), withTimestamp({ items }));
+    await setDoc(doc(ref, user.uid), { items: withTimestamp(items) });
 };
