@@ -17,8 +17,8 @@ export const checkLoggedIn = () => new Promise((resolve, reject) => {
                 user.set(loggedInUser);
             }
             checkedForLogin.set(true);
+            resolve(true);
         });
-        resolve(true);
     } catch (error) {
         reject(error);
     }

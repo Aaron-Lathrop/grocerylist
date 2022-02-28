@@ -4,7 +4,9 @@
     import TypeAhead from './TypeAhead.svelte';
     import GrocerySection from './GrocerySection.svelte';
 
-    $: currentGroceryStore = $groceryStore[0] || { sections: [], name: '' };
+    $: currentGroceryStore = $groceryStore && $groceryStore[0] 
+        ? $groceryStore[0] 
+        : { sections: [], name: '' };
     $: normalizedGroceryItems = $groceryItems.map(i => ({ name: i.name.toLowerCase(), gotIt: i.gotIt }));
     $: normalizedItemNames = normalizedGroceryItems.map(i => i.name);
     $: allItemsInStore = currentGroceryStore.sections.flatMap(x => x.items.map(i => i.toLowerCase()))

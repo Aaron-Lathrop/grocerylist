@@ -38,35 +38,47 @@ export const getGroceryItems = async (user) => {
 };
 
 //set collection data
+export const withTimestamp = data => {
+    if (Array.isArray(data)) {
+        return data.map(d => withTimestamp(d));
+    }
+    else if (typeof data == 'object') {
+        return { ...data, timestamp: Date.now() };
+    }
+};
+
 export const addGroceryStore = async (user, store) => {
     if (!store || !store.name) return;
     if (!user.uid) return;
 
-    const data = {
-        stores: [{
-            name: store.name.toLowerCase(),
-            sections: store.sections || []
-        }]
-    };
     const ref = collection(db, groceryStoreKey);
-    await setDoc(doc(ref, user.uid), data);
+    await setDoc(doc(ref, user.uid), withTimestamp({
+        stores: arrayUnion({
+            name: store.name,
+            sections: store.sections || []
+        })
+    }),
+    { merge: true }
+    );
 };
 
 export const addGroceryItem = async (user, item) => {
     if (!item || !item.name || !user.uid) return;
 
     const ref = collection(db, groceryItemsKey);
-    await setDoc(doc(ref, user.uid), {
+    await setDoc(doc(ref, user.uid), withTimestamp({
         items: arrayUnion({
             name: item.name,
             gotIt: false
         })
-    });
+    }),
+    { merge: true }
+    );
 };
 
 export const setGroceryItems = async (user, items) => {
     if (!items || !user.uid) return;
 
     const ref = collection(db, groceryItemsKey);
-    await setDoc(doc(ref, user.uid), { items });
+    await setDoc(doc(ref, user.uid), withTimestamp({ items }));
 };

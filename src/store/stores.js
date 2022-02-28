@@ -7,18 +7,18 @@ export const user = writable({});
 
 export const alert = writable('');
 
-const createGroceryStore = () => {
-	const { subscribe, set, update } = localStore([]);
+const createGroceryStore = (inital) => {
+	const { subscribe, set, update } = localStore('grocery-stores', inital);
 	return {
 		subscribe,
 		set,
 		update
 	};
 };
-export const groceryStore = createGroceryStore();
+export const groceryStore = createGroceryStore([]);
 
 const createGroceryItems = (initial) => {
-	const gItems = localStore('groceryItems', initial);
+	const gItems = localStore('grocery-items', initial);
 	const { subscribe, set, update, value } = gItems;
 	let userValue;
 	user.subscribe(val => userValue = val);
